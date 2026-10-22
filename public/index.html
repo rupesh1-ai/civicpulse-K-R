@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#081522"><meta name="description" content="CivicPulse — Better Cities. Together.">
+  <title>CivicPulse — Better Cities. Together.</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-brand"><img src="/logo.svg" alt="CivicPulse logo"><span>Civic<span class="green">Pulse</span></span></div>
+    <div class="auth-card">
+      <div class="eyebrow">CITIZEN ACCESS</div><h1>Better cities start <span class="green">together.</span></h1>
+      <p class="muted">Sign in or create an account with your mobile number to continue.</p>
+      <label for="nameInput">Your full name</label>
+      <input id="nameInput" type="text" placeholder="Enter your name" autocomplete="name" maxlength="80" required>
+      <label for="authMode">Verification method</label>
+      <select id="authMode" class="auth-mode-select">
+        <option value="demo">Free demo OTP (no SMS)</option>
+        <option value="sms">Real SMS OTP (provider required)</option>
+      </select>
+      <p id="authModeHelp" class="small muted">Free for local testing. Use code 123456; no message is sent to your phone.</p>
+      <label for="phoneInput">Mobile number with country code</label>
+      <input id="phoneInput" type="tel" placeholder="+919876543210" autocomplete="tel" maxlength="16">
+      <button id="sendOtpBtn" class="btn primary full">Send OTP <span>→</span></button>
+      <div id="otpArea" class="hidden">
+        <label for="otpInput">Verification code</label>
+        <input id="otpInput" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter OTP" maxlength="8">
+        <button id="verifyOtpBtn" class="btn primary full">Verify & continue</button>
+        <button id="changePhoneBtn" class="btn text-btn full">Change phone number</button>
+      </div>
+      <p id="authMessage" class="notice" role="status"></p>
+      <p id="demoHint" class="small muted"></p>
+      <div class="secure-note">🔒 Your number is used for sign-in. Never share your OTP with anyone.</div>
+    </div>
+    <div class="auth-footer">CivicPulse · Better Cities. Together.</div>
+  </section>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#"><img src="/logo.svg" alt=""><span>Civic<span class="green">Pulse</span></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-link active" data-view="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-link" data-view="issues">◎ <span>Civic issues</span></button>
+      <button class="nav-link" data-view="map">⌖ <span>Live issue map</span></button>
+      <button class="nav-link" data-view="emergency">✚ <span>Emergency contacts</span></button>
+      <button class="nav-link" data-view="assistant">✦ <span>AI assistant</span></button>
+      <div class="sidebar-bottom"><div class="side-label">ACCOUNT</div><button id="profileBtn" class="nav-link">◉ <span>My profile</span></button><button id="logoutBtn" class="nav-link">↪ <span>Sign out</span></button><div class="sidebar-tag">COMMUNITY POWERED<br><b>Better Cities. Together.</b></div></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><button id="mobileMenuBtn" class="icon-btn" aria-label="Open menu">☰</button><div><div class="eyebrow">CIVIC INTELLIGENCE PLATFORM</div><h2 id="pageTitle">Dashboard overview</h2></div><button id="topProfileBtn" class="profile-chip"><span class="avatar">CP</span><span id="topUserName">Citizen</span><span>⌄</span></button></header>
+      <section id="dashboardView" class="view">
+        <div class="hero"><div><div class="eyebrow light">YOUR COMMUNITY, YOUR VOICE</div><h1>Make your ward<br><span>better every day.</span></h1><p>Report local issues. Follow progress. Help build a city that works for everyone.</p><button class="btn light-btn" data-action="report">＋ Report an issue</button></div><div class="hero-orb"><img src="/logo.svg" alt=""></div></div>
+        <div class="stats-grid"><article class="stat-card"><span class="stat-icon teal">◎</span><span class="stat-label">Total issues</span><strong id="statTotal">—</strong><small>Across this demo</small></article><article class="stat-card"><span class="stat-icon amber">◷</span><span class="stat-label">In progress</span><strong id="statProgress">—</strong><small>Being followed up</small></article><article class="stat-card"><span class="stat-icon green-bg">✓</span><span class="stat-label">Resolved</span><strong id="statResolved">—</strong><small>Marked resolved in demo</small></article><article class="stat-card"><span class="stat-icon blue-bg">⌖</span><span class="stat-label">Departments</span><strong id="statDepartments">08</strong><small>Service categories</small></article></div>
+        <div class="content-grid"><section class="panel"><div class="panel-head"><div><h3>Recent civic issues</h3><p>Updates from your community</p></div><button class="link-btn" data-view="issues">View all →</button></div><div id="recentIssues" class="issue-list"></div></section><section class="panel"><div class="panel-head"><div><h3>Emergency access</h3><p>Call official services directly</p></div><span class="live-dot">● READY</span></div><div id="quickContacts" class="contact-list"></div><button class="btn outline full" data-view="emergency">View all contacts</button></section></div>
+        <section class="panel departments-panel"><div class="panel-head"><div><h3>Departments & services</h3><p>Choose the category that best matches your concern</p></div></div><div id="departmentsGrid" class="departments-grid"></div></section><section class="panel map-panel"><div class="panel-head"><div><h3>Issue locations</h3><p>Illustrative sample locations — not official live feeds</p></div><button class="link-btn" data-view="map">Open full map ↗</button></div><div id="dashboardMap" class="map"></div></section>
+      </section>
+      <section id="issuesView" class="view hidden"><div class="section-intro"><div><h1>Community issues</h1><p>Open a report to see its description, status, and location on the map.</p></div><button class="btn primary" data-action="report">＋ Report issue</button></div><div class="filter-row"><input id="issueSearch" placeholder="Search title, location, category…"><select id="statusFilter"><option value="">All statuses</option><option>Reported</option><option>In progress</option><option>Resolved</option></select></div><div id="allIssues" class="issue-cards"></div></section>
+      <section id="mapView" class="view hidden"><div class="section-intro"><div><h1>Live issue map</h1><p>Interactive map with sample issue pins. Enable location permission to center on your position.</p></div><button id="locateBtn" class="btn outline">⌖ Find my location</button></div><div id="fullMap" class="map full-map"></div><div id="mapIssueList" class="map-issue-list"></div></section>
+      <section id="emergencyView" class="view hidden"><div class="section-intro"><div><h1>Emergency contacts</h1><p>Use verified emergency services for urgent situations. Department-specific municipal contacts must be verified locally.</p></div></div><div id="contactsGrid" class="contacts-grid"></div><div class="notice warning">Contact numbers are configured as India-wide or illustrative entries. Verify service availability and local jurisdiction before public deployment.</div></section>
+      <section id="assistantView" class="view hidden"><div class="section-intro"><div><h1>CivicPulse Assistant</h1><p>Ask how to report an issue or use the platform.</p></div></div><div class="chat-panel"><div class="chat-header"><div class="assistant-avatar">✦</div><div><b>CivicPulse AI Assistant</b><small id="aiStatus">Ready to help</small></div></div><div id="chatMessages" class="chat-messages"><div class="bubble bot">Hello! I can help you navigate CivicPulse and understand how to report a civic issue. What do you need help with?</div></div><form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Ask a civic question…" maxlength="1500" required><button type="button" id="chatMicBtn" class="mic-btn" aria-label="Speak your question" title="Speak your question">🎙</button><button class="btn primary">Send ↑</button></form></div></section>
+    </main>
+  </div>
+  <div id="issueModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="issueModalTitle"><div class="modal-card wide"><button class="modal-close" data-close="issueModal" aria-label="Close">×</button><div class="eyebrow">COMMUNITY REPORT</div><h2 id="issueModalTitle">Issue details</h2><div id="issueDetails"></div></div></div>
+  <div id="reportModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="reportTitle"><div class="modal-card"><button class="modal-close" data-close="reportModal" aria-label="Close">×</button><div class="eyebrow">MAKE YOUR VOICE HEARD</div><h2 id="reportTitle">Report a civic issue</h2><form id="reportForm"><label for="reportIssueTitle">Issue title</label><input id="reportIssueTitle" required maxlength="100" placeholder="e.g. Broken streetlight"><label for="reportCategory">Category</label><select id="reportCategory" required><option value="Roads">Roads & potholes</option><option value="Waste">Garbage & waste</option><option value="Water">Water & drainage</option><option value="Electricity">Streetlights & electricity</option><option value="Sanitation">Sanitation & public toilets</option><option value="Parks">Parks & public spaces</option><option value="Traffic">Traffic & road safety</option><option value="Public Health">Public health</option><option value="Other">Other</option></select><label for="reportLocation">Location or landmark</label><input id="reportLocation" required placeholder="Street, landmark, ward"><div class="form-row"><div><label for="reportLat">Latitude (optional)</label><input id="reportLat" type="number" step="any" placeholder="31.3260"></div><div><label for="reportLng">Longitude (optional)</label><input id="reportLng" type="number" step="any" placeholder="75.5762"></div></div><label for="reportDescription">Description</label><textarea id="reportDescription" required maxlength="1200" rows="4" placeholder="Describe what happened and how it affects people…"></textarea><p id="reportMessage" class="notice" role="status"></p><button class="btn primary full">Submit report</button></form></div></div>
+  <div id="profileModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card"><button class="modal-close" data-close="profileModal">×</button><div class="eyebrow">YOUR ACCOUNT</div><h2>My profile</h2><div id="profileInfo"></div><p class="muted small">This demo profile is associated with your verified phone number.</p><button id="profileLogoutBtn" class="btn outline full">Sign out</button></div></div>
+  <div id="quickAssistant" class="quick-assistant hidden" aria-live="polite">
+    <button id="quickAssistantClose" class="quick-assistant-close" aria-label="Close assistant">×</button>
+    <div class="quick-assistant-head"><span class="quick-assistant-logo">✦</span><div><b>CivicPulse AI</b><small id="quickAiStatus">Ask or speak a civic concern</small></div></div>
+    <div id="quickChatMessages" class="quick-chat-messages"><div class="bubble bot">Hi! Tell me about a civic concern or ask how to report it.</div></div>
+    <form id="quickChatForm" class="quick-chat-form"><input id="quickChatInput" placeholder="Type your question…" maxlength="1500" required><button type="button" id="quickChatMic" class="mic-btn" aria-label="Speak your question" title="Speak your question">🎙</button><button class="quick-send" aria-label="Send message">➤</button></form>
+    <p class="voice-note">Mic requires browser permission. Voice recognition support varies by browser.</p>
+  </div>
+  <button id="assistantFab" class="assistant-fab hidden" aria-label="Open CivicPulse AI assistant" title="CivicPulse AI assistant"><span>✦</span><i class="fab-mic">🎙</i></button>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/app.js"></script><script src="/auth.js"></script><script src="/map.js"></script><script src="/chat.js"></script>
+</body></html>

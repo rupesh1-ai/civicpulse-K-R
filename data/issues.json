@@ -1,0 +1,41 @@
+[
+  {
+    "id": "CP-1001",
+    "title": "Pothole near Main Road",
+    "category": "Roads",
+    "description": "A large pothole is affecting two-wheelers near the bus stop. Please inspect and repair the road surface.",
+    "location": "Main Road, Ward 4",
+    "lat": 31.326,
+    "lng": 75.5762,
+    "status": "In progress",
+    "priority": "High",
+    "reportedAt": "Sample data",
+    "sample": true
+  },
+  {
+    "id": "CP-1002",
+    "title": "Overflowing community bin",
+    "category": "Waste",
+    "description": "The public bin is full and waste is spilling onto the footpath.",
+    "location": "Green Park entrance, Ward 2",
+    "lat": 31.329,
+    "lng": 75.581,
+    "status": "Reported",
+    "priority": "Medium",
+    "reportedAt": "Sample data",
+    "sample": true
+  },
+  {
+    "id": "CP-1003",
+    "title": "Streetlight not working",
+    "category": "Electricity",
+    "description": "The streetlight at the corner has not worked for three nights.",
+    "location": "Market Street, Ward 6",
+    "lat": 31.322,
+    "lng": 75.57,
+    "status": "Resolved",
+    "priority": "Low",
+    "reportedAt": "Sample data",
+    "sample": true
+  }
+]
