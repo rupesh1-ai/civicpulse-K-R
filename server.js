@@ -7,6 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 const demoMode = process.env.DEMO_MODE !== "false";
 const hasTwilio = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_VERIFY_SERVICE_SID;
